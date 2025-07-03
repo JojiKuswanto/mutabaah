@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+<head>
+  <title>Admin Dashboard - Mutabaah Yaumiyah</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <h2>Dashboard Admin</h2>
+
+  <form method="get">
+    <label>Minggu:</label>
+    <input name="week" value="{{ week }}">
+    <label>Bulan:</label>
+    <input name="month" value="{{ month }}">
+    <button type="submit">Lihat</button>
+  </form>
+
+  <h3>Grafik Total Skor Seluruh User</h3>
+  <canvas id="chart" width="600" height="300"></canvas>
+
+  <script>
+    const ctx = document.getElementById('chart').getContext('2d');
+    const chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: {{ users|tojson }},
+        datasets: [{
+          label: 'Total Skor',
+          data: {{ totals|tojson }},
+          backgroundColor: 'rgba(75, 192, 192, 0.7)'
+        }]
+      }
+    });
+  </script>
+
+  {% if notifs %}
+  <h3 style="color:red;">Notifikasi: User dengan Skor di Bawah Target</h3>
+  <ul>
+    {% for n in notifs %}
+      <li><strong>{{ n.user }}</strong>: {{ n.score }} dari target {{ n.target }} (kurang dari 50%)</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+</body>
+</html>
